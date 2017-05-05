@@ -10,108 +10,83 @@ static void LCD_bl_close(u32 sel);
 static void LCD_panel_init(u32 sel);
 static void LCD_panel_exit(u32 sel);
 #define panel_reset(val) sunxi_lcd_gpio_set_value(sel, 0, val)
+#define panel_reset(val) sunxi_lcd_gpio_set_value(sel, 0, val)
 
 #define LCD_GPIO_SDA 1
 #define LCD_GPIO_SCL 2
 
-#define	LCD_SDA_INDEX	9
-#define	LCD_SCK_INDEX	8
+#define	LCD_SDA_INDEX	1
+#define	LCD_SCK_INDEX	0
 
-#define	LCD_SDA_INDEX_CFG1	(9-8)
-#define	LCD_SCK_INDEX_CFG1	(8-8)
+#define	LCD_SDA_INDEX_CFG1	(1)
+#define	LCD_SCK_INDEX_CFG1	(0)
 
 inline void IIC_SCLB_LOW(void)
 {
-#if 0
-	sunxi_lcd_gpio_set_direction(0, LCD_GPIO_SCL, 1);
-	sunxi_lcd_gpio_set_value(0, LCD_GPIO_SCL, 0);
-#else
 	//	printf("!!!!!!%s\n",__func__);
 	uint reg_val;
-	reg_val = readl(0x1F02C00 + 0x04);	//PH CFG
-	reg_val &= ~(0x7 << (LCD_SCK_INDEX_CFG1*4));
-	reg_val |= (0x1 << (LCD_SCK_INDEX_CFG1*4));	//SCK
-	writel(reg_val, (0x1F02C00 + 0x04));
-	reg_val = readl(0x1F02C00 + 0x10);	//ph4
-	reg_val &= ~(1<<LCD_SCK_INDEX);
-	writel(reg_val, (0x1F02C00 + 0x10));
 
-#endif
+    // Make GPIO
+	reg_val = readl(0x01C20800 + 0x24*7);
+	reg_val &= ~(0x7 << (LCD_SCK_INDEX_CFG1*4));
+	reg_val |= (0x1 << (LCD_SCK_INDEX_CFG1*4));
+	writel(reg_val, (0x01C20800 + 0x24*7));
+
+    // Pull low
+	reg_val = readl(0x01C20800 + 0x24*7 + 0x10); 
+	reg_val &= ~(1<<LCD_SCK_INDEX);
+	writel(reg_val, (0x01C20800 + 0x24*7 + 0x10));
+
 }
 
 inline void IIC_SCLB_HIGH(void)
 {
-    #if 0
-	sunxi_lcd_gpio_set_direction(0, LCD_GPIO_SCL, 0);
-
-#else
-	//	printf("!!!!!!%s\n",__func__);
 	uint reg_val;
-	reg_val = readl(0x1F02C00 + 0x04);	//PH4 CFG
+	reg_val = readl(0x01C20800 + 0x24*7);	//PH4 CFG
 	reg_val &= ~(0x7 << (LCD_SCK_INDEX_CFG1*4));
-	writel(reg_val, (0x1F02C00 + 0x04));
+	writel(reg_val, (0x01C20800 + 0x24*7));
 
-#endif
 }
 
 inline void IIC_SDAB_LOW(void)
 {
-    #if 0
-	sunxi_lcd_gpio_set_direction(0, LCD_GPIO_SDA, 1);
-	sunxi_lcd_gpio_set_value(0, LCD_GPIO_SDA, 0);
-
-#else
-	//printf("!!!!!!%s\n",__func__);
 	uint reg_val;
-	reg_val = readl(0x1F02C00 + 0x04);	//PH5 CFG
-	reg_val &= ~(0x7 << (LCD_SDA_INDEX_CFG1*4));
-	reg_val |= (0x1 << (LCD_SDA_INDEX_CFG1*4));	//SDA
-	writel(reg_val, (0x1F02C00 + 0x04));
 
-	reg_val = readl(0x1F02C00 + 0x10);	//ph5
+    //Make gpio
+	reg_val = readl(0x01C20800 + 0x24*7);
+	reg_val &= ~(0x7 << (LCD_SDA_INDEX_CFG1*4));
+	reg_val |= (0x1 << (LCD_SDA_INDEX_CFG1*4));
+	writel(reg_val, (0x01C20800 + 0x24*7));
+
+    // Pull low
+	reg_val = readl(0x01C20800 + 0x24*7 + 0x10);	
 	reg_val &= ~(1<<LCD_SDA_INDEX);
-	writel(reg_val, (0x1F02C00 + 0x10));
-#endif
+	writel(reg_val, (0x01C20800 + 0x24*7 + 0x10));
 }
 
 inline void IIC_SDAB_HIGH(void)
 {
-    #if 0
-
-	sunxi_lcd_gpio_set_direction(0, LCD_GPIO_SDA, 0);
-
-#else
-	//printf("!!!!!!%s\n",__func__);
 	uint reg_val;
-	reg_val = readl(0x1F02C00 + 0x04);	//PH5 CFG
+	reg_val = readl(0x01C20800 + 0x24*7);
 	reg_val &= ~(0x7 << (LCD_SDA_INDEX_CFG1*4));
-	//reg_val |= (0x1 << 12);	//SDA
-	writel(reg_val, (0x1F02C00 + 0x04));
+	writel(reg_val, (0x01C20800 + 0x24*7));
 
-#endif
 }
 
 inline __u32 CHECK_SDAB_HIGH(void)
 {
-    #if 0
-
-	sunxi_lcd_gpio_set_direction(0, LCD_GPIO_SDA, 0);
-	return sunxi_lcd_gpio_set_value(0, LCD_GPIO_SDA, 2);//if data==2 ,return value
-
-#else
-	//	printf("!!!!!!%s\n",__func__);
 	uint reg_val;
-
-	reg_val = readl(0x1F02C00 + 0x04);	//PH5 CFG
+	
+	reg_val = readl(0x01C20800 + 0x24*7);	//PH5 CFG
 	reg_val &= ~(0x7 << (LCD_SDA_INDEX_CFG1*4));
-	//reg_val |= (0x1 << 12);	//SDA
-	writel(reg_val, (0x1F02C00 + 0x04));
-
-	reg_val = readl(0x1F02C00 + 0x10);
+	writel(reg_val, (0x01C20800 + 0x24*7));
+	
+	reg_val = readl(0x01C20800 + 0x24*7 + 0x10);
 	reg_val = (reg_val>>LCD_SDA_INDEX)&1;
 	return reg_val;
-#endif
 }
+
+
 
 int i2cB_clock( void )
 {
@@ -140,7 +115,6 @@ int i2cB_ack(void)
 	}
 	else
 	{
-//		sunxi_lcd_delay_us(5);
 		IIC_SCLB_LOW();
 		sunxi_lcd_delay_us(5);
 		IIC_SDAB_HIGH();
@@ -206,8 +180,6 @@ int i2cBTransmit(__u8 value)
 
 int i2cBLocateSubAddr(__u8 slave_addr, __u8 sub_addr)
 {
-//	register __u8 i;
-//	for (i=0; i<3; i++)
 	{
 		//Start I2C
 		if (i2cBStart())
@@ -374,7 +346,6 @@ static s32 LCD_close_flow(u32 sel)
 
 static void LCD_power_on(u32 sel)
 {
-//	printk("================power on \n");
 	panel_reset(0);
 
 	sunxi_lcd_power_enable(sel, 1);//config lcd_power pin to open lcd power1
@@ -403,15 +374,6 @@ static void LCD_power_off(u32 sel)
 
 static void LCD_bl_open(u32 sel)
 {
-#if 0
-		sunxi_lcd_pin_cfg(sel, 0);
-		sunxi_lcd_power_disable(sel, 0);
-		sunxi_lcd_delay_ms(100);
-		sunxi_lcd_pin_cfg(sel, 1);
-		sunxi_lcd_delay_ms(10);
-		sunxi_lcd_power_enable(sel, 0);
-		sunxi_lcd_delay_ms(200);
-#endif
 	sunxi_lcd_pwm_enable(sel);
 	sunxi_lcd_backlight_enable(sel);//config lcd_bl_en pin to open lcd backlight
 }
@@ -422,7 +384,7 @@ static void LCD_bl_close(u32 sel)
 	sunxi_lcd_pwm_disable(sel);
 }
 
-#ifdef CONFIG_PINEBOOK_MODEL
+#ifdef CONFIG_OLIMEX_MODEL
 int has_anx9807_chip(void)
 {
   __u8 c = 0;
@@ -451,15 +413,31 @@ static void LCD_panel_init(u32 sel)
     int lcd_edp_tx_rate=0;
     int lcd_model_name;
 
-//   disp_sys_script_get_item("lcd0", "lcd_edp_tx_rate", &lcd_edp_tx_rate, 1);
-//   disp_sys_script_get_item("lcd0", "lcd_edp_tx_lane", &lanes, 1);
-//   disp_sys_script_get_item("lcd0", "lcd_edp_colordepth", &colordepth, 1);
-//   disp_sys_script_get_item("lcd0", "lcd_model_name", &lcd_model_name, 1);
+uint reg_val;
+// PD23 - 1 + PD22 -1 
+   reg_val = readl(0x01C20800 + 0x74);
+   reg_val &= ~(0x7 << 28);
+   reg_val |= (0x1 << 28);
+   reg_val &= ~(0x7 << 24);
+   reg_val |= (0x1 << 24);
+   writel(reg_val, (0x01C20800 + 0x74));
+
+   // PD24 - 1
+   reg_val = readl(0x01C20800 + 0x78);
+   reg_val &= ~0x7;
+   reg_val |= 0x1;
+   writel(reg_val, (0x01C20800 + 0x78));
+
+    // Pull high
+    reg_val = readl(0x01C20800 + 0x7C);
+    reg_val |= ((1 << 23) | (1 << 24) | (1 << 22));
+    writel(reg_val, (0x01C20800 + 0x7C));
+
    lcd_edp_tx_rate=2;
    lanes=1;
    colordepth=1;
    lcd_model_name=2;
-   tick_printf("\nlcd_edp_tx_rate=%d,\nlcd_edp_tx_lane=%d,\nlcd_edp_colordepth=%d,\nlcd_model_name=%d\n",lcd_edp_tx_rate,lanes,colordepth,lcd_model_name);
+  /* tick_printf("\nlcd_edp_tx_rate=%d,\nlcd_edp_tx_lane=%d,\nlcd_edp_colordepth=%d,\nlcd_model_name=%d\n",lcd_edp_tx_rate,lanes,colordepth,lcd_model_name);*/
 
 		if(lcd_model_name==1){
 				//lcd_edp_tx_rate =1;
@@ -499,22 +477,6 @@ static void LCD_panel_init(u32 sel)
 				tick_printf("NX9804 Chip not found\n");
 				}
 
-			#if 0
-				//for clock detect
-				for(i=0;i<50;i++)
-				{
-					lcd_iic_read(0x70, DP_TX_SYS_CTRL1_REG, &c);
-					lcd_iic_write(0x70, DP_TX_SYS_CTRL1_REG, c);
-					lcd_iic_read(0x70, DP_TX_SYS_CTRL1_REG, &c);
-					if((c&DP_TX_SYS_CTRL1_DET_STA)!=0)
-					{
-				//		printk("ANX9804 clock is detected.\n");
-						break;
-					}
-
-					sunxi_lcd_delay_ms(10);
-				}
-			#endif
 
 			       //check whether clock is stable
 				for(i=0;i<50;i++)
@@ -567,36 +529,6 @@ static void LCD_panel_init(u32 sel)
 				lcd_iic_write(0x70, 0xa5, 0x00);
 				lcd_iic_write(0x70, 0xa6, 0x00);
 
-			#if 0
-				//step 1: read DPCD 0x00001, the correct value should be 0x0a, or 0x06
-				lcd_iic_write(0x70,  0xE4,  0x80);
-
-				//set read cmd and count, read 2 __u8s data, get downstream max_bandwidth and max_lanes
-				lcd_iic_write(0x70, 0xE5,  0x19);
-
-				//set aux address19:0
-				lcd_iic_write(0x70,  0xE6,  0x01);
-				lcd_iic_write(0x70,  0xE7,  0x00);
-				lcd_iic_write(0x70,  0xE8,  0x00);
-
-				//Enable Aux
-				lcd_iic_write(0x70,  0xE9, 0x01);
-
-				//wait aux finished
-				for(i=0; i<50; i++)
-				{
-				  lcd_iic_read(0x70,  0xE9,  &c);
-				  if(c==0x00)
-				  {
-				    break;
-				  }
-				}
-
-				//read data from buffer
-				lcd_iic_write(  0x70,  0xF0,   &max_bandwidth);
-				lcd_iic_write(  0x70,  0xF1,   &max_lanes);
-				debug_pr__s32f("max_bandwidth = %.2x, max_lanes = %.2x\n", (WORD)max_bandwidth, (WORD)max_lanes);
-			#endif
 
 				//reset AUX CH
 				lcd_iic_write(0x72,  DP_TX_RST_CTRL2_REG,  0x44);
@@ -648,38 +580,8 @@ static void LCD_panel_init(u32 sel)
 			        }
 					lcd_iic_read(0x70, DP_TX_LINK_TRAINING_CTRL_REG, &c);
 				}
-				//lcd_iic_write(0x7a, 0x7c, 0x02);
-
-			    //BIST MODE: video format. In normal mode, don't need to config these reg from 0x12~0x21
-				//lcd_iic_write(0x72, 0x12, 0x2c);
-				//lcd_iic_write(0x72, 0x13, 0x06);
-				//lcd_iic_write(0x72, 0x14, 0x00);
-				//lcd_iic_write(0x72, 0x15, 0x06);
-				//lcd_iic_write(0x72, 0x16, 0x02);
-				//lcd_iic_write(0x72, 0x17, 0x04);
-				//lcd_iic_write(0x72, 0x18, 0x26);
-				//lcd_iic_write(0x72, 0x19, 0x50);
-				//lcd_iic_write(0x72, 0x1a, 0x04);
-				//lcd_iic_write(0x72, 0x1b, 0x00);
-				//lcd_iic_write(0x72, 0x1c, 0x04);
-				//lcd_iic_write(0x72, 0x1d, 0x18);
-				//lcd_iic_write(0x72, 0x1e, 0x00);
-				//lcd_iic_write(0x72, 0x1f, 0x10);
-				//lcd_iic_write(0x72, 0x20, 0x00);
-				//lcd_iic_write(0x72, 0x21, 0x28);
-
-				//lcd_iic_write(0x72, 0x11, 0x03);
-
-			    //enable BIST. In normal mode, don't need to config this reg
-				//lcd_iic_write(0x72, 0x0b, 0x08);
-
-				//enable video input, set DDR mode, the input DCLK should be 102.5MHz;
-				//In normal mode, set this reg to 0x81, SDR mode, the input DCLK should be 205MHz
-				//lcd_iic_write(0x72, 0x08, 0x8d);
-				//lcd_iic_write(0x72, 0x08, 0x81);
 				lcd_iic_write(0x72, 0x08, 0x81);
 
-			    //force HPD and stream valid
 				lcd_iic_write(0x70, 0x82, 0x33);
 
 				return;
@@ -699,6 +601,7 @@ static void LCD_panel_init(u32 sel)
 					{
 						tick_printf("ANX9807 Chip not found\n");
 					}
+
 
 					lcd_iic_read(0x70, DP_TX_SYS_CTRL1_REG, &c);
 					lcd_iic_write(0x70, DP_TX_SYS_CTRL1_REG, 0x0);

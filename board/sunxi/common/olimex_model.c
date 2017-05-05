@@ -19,10 +19,6 @@ int set_misc(void)
         int     enabled = 0;
         int nodeoffset;
 	__u32  gpio_hd = 0;
-        //sprite_led_status = 1;
-
-        //正常工��~\�~W���~L�~A��~W��~C~A�~Z~D�~W��~W�
-        //ret = script_parser_fetch("card_boot", "sprite_work_delay", (void *)&delay, 1);
 
         nodeoffset =  fdt_path_offset(working_fdt,FDT_PATH_HDEBUG);
         if(nodeoffset >0)
@@ -44,7 +40,6 @@ int set_misc(void)
                                 printf("reuqest gpio for headphone debug failed\n");
                                 return 1;
                         } else {
-				printf("reuqest gpio for headphone debug successfully\n");
 			
 				 if (enabled == 0 ) {
                         		ret1 =  gpio_write_one_pin_value(gpio_hd, 1, "debug_en_gpio");

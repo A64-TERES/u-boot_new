@@ -12,6 +12,7 @@
 #include "sunxi_string.h"
 #include "sunxi_serial.h"
 #include "pine64_model.h"
+#include "olimex_model.h"
 #include <fdt_support.h>
 #include <arisc.h>
 
@@ -548,6 +549,9 @@ int board_late_init(void)
 #endif
 #ifdef CONFIG_PINE64_MODEL
 		pine64_set_model();
+#endif
+#ifdef CONFIG_OLIMEX_MODEL
+		olimex_set_model();
 #endif
 		return 0;
 	}

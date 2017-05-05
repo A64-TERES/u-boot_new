@@ -43,7 +43,7 @@
 
 #define CONFIG_STORAGE_MEDIA_NAND
 #define CONFIG_STORAGE_MEDIA_MMC
-
+/*#define CONFIG_STORAGE_MEDIA_SPINOR*/
 
 #define CONFIG_TARGET_NAME      sun50iw1p1
 #define CONFIG_SYS_GENERIC_BOARD
@@ -346,9 +346,9 @@
 	"fdt_addr=45000000\0" \
 	"kernel_addr=41080000\0" \
 	"initrd_addr=45300000\0" \
-	"kernel_filename=pine64/Image\0" \
-	"fdt_filename_prefix=pine64/sun50i-a64-\0" \
-	"fdt_filename_suffix=.dtb\0" \
+	"kernel_filename=a64/Image\0" \
+	"fdt_filename_prefix=a64/a64-\0" \
+	"fdt_filename_suffix=olinuxino.dtb\0" \
 	"initrd_filename=initrd.img\0" \
 	"bootenv_filename=uEnv.txt\0" \
 	"load_bootenv=" \
@@ -357,7 +357,7 @@
 		"env import -t ${load_addr} ${filesize}\0" \
 	"load_dtb=" \
 		"if test ${fdt_filename} = \"\"; then " \
-			"setenv fdt_filename ${fdt_filename_prefix}${pine64_model}${fdt_filename_suffix}; " \
+			"setenv fdt_filename ${fdt_filename_prefix}${fdt_filename_suffix}; " \
 		"fi; " \
 		"fatload mmc ${boot_part} ${fdt_addr} ${fdt_filename}; " \
 		"fdt addr ${fdt_addr}; fdt resize\0" \
@@ -435,8 +435,9 @@
 #define CONFIG_CMD_ECHO
 #define CONFIG_CMD_SOURCE
 #define CONFIG_CMD_SUNXI_UMS
-
+#define CONFIG_OLIMEX_MODEL
+/*
 #define CONFIG_PINE64_MODEL
 #define CONFIG_PINEBOOK_MODEL
-
+*/
 #endif /* __CONFIG_H */

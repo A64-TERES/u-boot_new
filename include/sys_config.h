@@ -29,6 +29,7 @@
 #define   FDT_PATH_FEL_KEY                   "/soc/fel_key"
 #define   FDT_PATH_RECOVERY_KEY              "/soc/recovery_key"
 #define   FDT_PATH_FASTBOOT_KEY              "/soc/fastboot_key"
+#define   FDT_PATH_HDEBUG                    "/soc/headphone_debug" //Headphone Debug alias
 #define   FDT_PATH_KEY_DETECT                "/soc/key_detect_en"
 #define   FDT_PATH_PLATFORM                  "/soc/platform"
 #define   FDT_PATH_POWER_SPLY                "/soc/power_sply"
