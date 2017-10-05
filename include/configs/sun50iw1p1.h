@@ -360,7 +360,7 @@
 			"setenv fdt_filename ${fdt_filename_prefix}${fdt_filename_suffix}; " \
 		"fi; " \
 		"fatload mmc ${boot_part} ${fdt_addr} ${fdt_filename}; " \
-		"fdt addr ${fdt_addr}; fdt resize\0" \
+		"fdt addr ${fdt_addr}; fdt resize; set_debug\0" \
 	"load_kernel=" \
 		"fatload mmc ${boot_part} ${kernel_addr} ${kernel_filename}\0" \
 	"boot_kernel=booti ${kernel_addr} ${initrd_addr}:${initrd_size} ${fdt_addr}\0" \

@@ -66,7 +66,7 @@ int sprite_cartoon_screen_set(void)
 	}
 	sprite_source.screen_size   = sprite_source.screen_width * sprite_source.screen_height * 4;
 	sprite_source.screen_buf 	= malloc(sprite_source.screen_size);
-	sprite_source.color         = SPRITE_CARTOON_GUI_GREEN;
+	sprite_source.color         = SPRITE_CARTOON_GUI_RED;
 
 	if(!sprite_source.screen_buf)
 	{

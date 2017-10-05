@@ -2,14 +2,47 @@
 #include <common.h>
 #include <fdt_support.h>
 #include <sys_config.h>
+#include "../cartoon/sprite_cartoon.h"
+#include "../cartoon/sprite_cartoon_i.h"
+#include "../cartoon/sprite_cartoon_color.h"
+#include <sunxi_display2.h>
+#include <sunxi_board.h>
 
 DECLARE_GLOBAL_DATA_PTR;
 
 #ifdef CONFIG_OLIMEX_MODEL
 int has_anx9807_chip(void);
 #endif
+int sprite_debug(void)
+{
 
-int set_misc(void)
+        int screen_width, screen_height;
+        int x1, x2, y1, y2;
+
+        sprite_cartoon_screen_set();
+        board_display_show_until_lcd_open(0);
+
+        screen_width  = borad_display_get_screen_width();
+        screen_height = borad_display_get_screen_height();
+
+
+        x1 = screen_width/4;
+        x2 = x1 * 3;
+
+        y1 = screen_height/2 - 40;
+        y2 = screen_height/2 + 40;
+
+        printf("bar x1: %d y1: %d\n", x1, y1);
+        printf("bar x2: %d y2: %d\n", x2, y2);
+
+
+        sprite_uichar_init(24);
+        sprite_uichar_printf("Debug mode selected !\n");
+
+
+return 0;
+}
+int set_misc(cmd_tbl_t * cmdtp, int flag, int argc, char * const argv[])
 {
 //FDT_PATH_HDEBUG
 	
@@ -46,6 +79,7 @@ int set_misc(void)
                 			} 
 			         if (enabled == 1 ) {
 					 ret1 = gpio_write_one_pin_value(gpio_hd, 0, "debug_en_gpio");
+					// sprite_debug();
                        			}		
 
 
@@ -56,6 +90,7 @@ int set_misc(void)
 
 		 printf("Headphone DEBUG State GPIO:%d\n",ret1);
         }
+		//sunxi_bmp_display("bootlogo.bmp");
         return 0;
 
 
@@ -71,7 +106,6 @@ int get_model(char* model)
 		sprintf(model, "a64-olinuxino");
 	}
 #endif
-		
 
 	return 0;
 }
@@ -85,6 +119,12 @@ int olimex_set_model(void)
 	{
 		printf("error:set variable [olimex_model] fail\n");
 	}
-	set_misc();
+	//set_misc();
 	return 0;
 }
+U_BOOT_CMD(
+        set_debug,    1,      0,      set_misc,
+        "get debug info from fdt",
+        "no args\n"
+);
+

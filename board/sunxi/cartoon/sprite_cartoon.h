@@ -26,6 +26,7 @@
 
 #include <common.h>
 #include <malloc.h>
+int sprite_cartoon_screen_set(void);
 
 
 #endif  /* __SPRITE_CARTOON_H__ */

@@ -76,8 +76,11 @@ SFTE_Face SFTE_New_Face( char *font_file)
 {
 	SFTE_Face	face = NULL;
 	void		*fp   = NULL;
-	char		load_addr[16] = { 0 };
-	char *const ui_char_argv[6] = { "fatload", "sunxi_flash", "0:0", load_addr, font_file, NULL };
+  	char		load_addr[16] = { 0 };
+        char 		boot_part[6] ={0};
+	strcpy(boot_part,getenv("boot_part"));
+    
+char *const ui_char_argv[6] = { "fatload","mmc", boot_part, load_addr, font_file, NULL };
 
 	/*request buffer to ch_lib, size is 1M*/
 	fp = (void *)malloc(1024 * 1024);

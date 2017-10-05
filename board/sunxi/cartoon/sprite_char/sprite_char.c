@@ -47,7 +47,6 @@ _ui_char_info_t  ui_char_info;
 int sprite_uichar_init(int char_size)
 {
 	char  font_name[] = "font24.sft";
-
 	memset(&ui_char_info, 0, sizeof(_ui_char_info_t));
 
 	ui_char_info.word_size = 24;
