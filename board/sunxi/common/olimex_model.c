@@ -110,6 +110,63 @@ int get_model(char* model)
 	return 0;
 }
 
+int do_env_set_debug(cmd_tbl_t * cmdtp, int flag, int argc, char * const argv[])
+{
+	 user_gpio_set_t gpio_init;
+	char debug_flag[3] = {0};
+	int enabled = 0;
+	int     ret = 0;
+        int     ret1 = 0;
+        __u32  gpio_hd = 0;
+//	int nodeoffset =0;
+// nodeoffset =  fdt_path_offset(working_fdt,FDT_PATH_HDEBUG);
+	strcpy(debug_flag,getenv("debug"));
+	printf("Test %s \n",debug_flag);
+	if (strcmp(debug_flag,"on") == 0) {
+		enabled = 1;
+
+	} 
+
+
+
+
+
+        memset(&gpio_init, 0, sizeof(user_gpio_set_t));
+
+        ret = fdt_get_one_gpio(FDT_PATH_HDEBUG, "debug_en_gpio",&gpio_init);
+        if(!ret)
+        {
+                if(gpio_init.port)
+                {
+                        gpio_hd = gpio_request(&gpio_init, 1);
+                        if(!gpio_hd)
+                        {
+                                printf("reuqest gpio for headphone debug failed\n");
+                                return 1;
+                        } else {
+
+                                 if (enabled == 0 ) {
+                                        ret1 =  gpio_write_one_pin_value(gpio_hd, 1, "debug_en_gpio");
+                                        }
+                                 if (enabled == 1 ) {
+                                         ret1 = gpio_write_one_pin_value(gpio_hd, 0, "debug_en_gpio");
+                                        // sprite_debug();
+                                        }
+
+
+                                }
+
+
+                }
+
+                 printf("Headphone DEBUG State GPIO:%d\n",ret1);
+        }
+
+
+
+
+return 0;
+}
 int olimex_set_model(void)
 {
 	char model[128] = {0}	;
@@ -127,4 +184,10 @@ U_BOOT_CMD(
         "get debug info from fdt",
         "no args\n"
 );
+U_BOOT_CMD(
+        env_set_debug,    1,      0,	do_env_set_debug,
+        "get debug info from env",
+        "no args\n"
+);
+
 
